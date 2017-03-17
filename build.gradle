@@ -1,0 +1,113 @@
+import org.gradle.internal.os.OperatingSystem
+
+switch ( OperatingSystem.current() ) {
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+}
+
+group 'fr.adamaq01'
+version '1.0'
+
+allprojects {
+    apply plugin: "idea"
+    apply plugin: 'java'
+
+    version = "1.0"
+    ext {
+        appName = "Suplge"
+        lwjglVersion = "3.1.1"
+    }
+
+    repositories {
+        mavenLocal();
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+
+    task fatJar(type: Jar) {
+        manifest {
+            attributes 'Implementation-Title': 'Suplge Full',
+                    'Implementation-Version': version
+        }
+        baseName = project.name + '-all'
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+        with jar
+    }
+
+}
+
+project(":suplge-api") {
+    dependencies {
+        compile "org.lwjgl:lwjgl:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-assimp:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-bgfx:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-egl:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-jawt:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-lmdb:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-nanovg:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-nfd:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-nuklear:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-opencl:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-ovr:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-par:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-sse:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-tinyfd:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-xxhash:${lwjglVersion}"
+        runtime "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-assimp:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-bgfx:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-lmdb:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-nanovg:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-nfd:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-nuklear:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-ovr:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-par:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-sse:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-tinyfd:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-xxhash:${lwjglVersion}:${lwjglNatives}"
+    }
+}
+
+project(":suplge-vulkan") {
+    dependencies {
+        compile project(":suplge-api")
+        compile "org.lwjgl:lwjgl-vulkan:${lwjglVersion}"
+    }
+}
+
+project(":suplge-opengl") {
+    dependencies {
+        compile project(":suplge-api")
+        compile "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+        runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
+    }
+}
+
+project(":suplge") {
+    dependencies {
+        compile project(":suplge-api")
+    }
+}
+
+project(":suplgetest") {
+    dependencies {
+        compile project(":suplge")
+        compile project(":suplge-vulkan")
+    }
+}
