@@ -90,7 +90,7 @@ public class VKWindow implements IWindow {
     public void open(Game game) {
         this.game = game;
         GLFWUtil.setWindowCloseCallback(this.windowHandle, () -> {
-            game.getCurrentScreen().onDisable();
+            game.getCurrentScreen().onDisable(game);
         });
         GLFWUtil.showWindow(this.windowHandle, true);
         setIcon(icon);
@@ -128,9 +128,9 @@ public class VKWindow implements IWindow {
             oldTimeSinceStart = timeSinceStart;
 
             GLFWUtil.pollEvents();
-            game.getCurrentScreen().update(deltaTime);
+            game.getCurrentScreen().update(game, deltaTime);
 
-            game.getCurrentScreen().render(graphics);
+            game.getCurrentScreen().render(game, graphics);
 
             frames++;
             if (timeSinceStart - start > 1) {

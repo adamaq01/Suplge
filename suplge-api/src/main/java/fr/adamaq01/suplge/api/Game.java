@@ -28,7 +28,7 @@ public abstract class Game {
     }
 
     public void stop() {
-        getCurrentScreen().onDisable();
+        getCurrentScreen().onDisable(this);
         window.close();
     }
 

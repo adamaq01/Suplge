@@ -4,6 +4,8 @@ import fr.adamaq01.suplge.api.Game;
 import fr.adamaq01.suplge.api.IScreen;
 import fr.adamaq01.suplge.api.IWindow;
 import fr.adamaq01.suplge.api.graphics.IGraphics;
+import fr.adamaq01.suplge.input.ControllerManager;
+import fr.adamaq01.suplge.input.glfw.GLFWController;
 import fr.adamaq01.suplge.vulkan.VKWindow;
 
 /**
@@ -22,25 +24,27 @@ public class Test extends Game {
 
     public static class TestScreen implements IScreen {
 
-        private Game game;
+        private ControllerManager controllerManager;
 
         @Override
         public void onEnable(Game game) {
-            this.game = game;
+            this.controllerManager = new ControllerManager();
+            this.controllerManager.add(new GLFWController());
         }
 
         @Override
-        public void onDisable() {
+        public void onDisable(Game game) {
 
         }
 
         @Override
-        public void update(double delta) {
+        public void update(Game game, double delta) {
             game.getWindow().setTitle("TestGame - " + game.getWindow().getFPS() + "FPS");
+            System.out.println(controllerManager.get(0).isConnected());
         }
 
         @Override
-        public void render(IGraphics graphics) {
+        public void render(Game game, IGraphics graphics) {
 
         }
     }

@@ -9,10 +9,10 @@ public interface IScreen {
 
     public void onEnable(Game game);
 
-    public void onDisable();
+    public void onDisable(Game game);
 
-    public void update(double delta);
+    public void update(Game game, double delta);
 
-    public void render(IGraphics graphics);
+    public void render(Game game, IGraphics graphics);
 
 }
