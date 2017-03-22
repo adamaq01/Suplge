@@ -2,6 +2,9 @@ package fr.adamaq01.suplge.input;
 
 import fr.adamaq01.suplge.api.IManager;
 import fr.adamaq01.suplge.api.input.controllers.IController;
+import fr.adamaq01.suplge.input.glfw.GLFWController;
+import fr.adamaq01.suplge.input.glfw.mappings.GLFWPlayStationControllerMapping;
+import fr.adamaq01.suplge.input.glfw.mappings.GLFWXboxControllerMapping;
 
 import java.util.HashMap;
 
@@ -21,6 +24,19 @@ public class ControllerManager implements IManager<IController> {
         controllers.put(controllersSize, controller);
         controllersId.put(controller, controllersSize);
         controllersSize++;
+        if(controller instanceof GLFWController) {
+            switch(controller.getName()) {
+                case "Xbox 360 Controller":
+                    controller.setControllerMapping(new GLFWXboxControllerMapping());
+                    return;
+                case "Wireless Controller":
+                    controller.setControllerMapping(new GLFWPlayStationControllerMapping());
+                    return;
+                default:
+                    controller.setControllerMapping(new GLFWXboxControllerMapping());
+                    return;
+            }
+        }
     }
 
     @Override
@@ -33,6 +49,7 @@ public class ControllerManager implements IManager<IController> {
         int id = controllersId.get(manageable);
         controllers.remove(id);
         controllersId.remove(manageable);
+        controllersSize--;
     }
 
     @Override

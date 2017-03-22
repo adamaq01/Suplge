@@ -110,4 +110,8 @@ public class GLFWUtil {
             }
         });
     }
+
+    public static double getTime() {
+        return glfwGetTime();
+    }
 }

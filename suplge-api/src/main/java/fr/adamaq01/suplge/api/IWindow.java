@@ -33,6 +33,10 @@ public interface IWindow {
 
     public int getMaxFPS();
 
+    public void setTPS(int tps);
+
+    public int getTPS();
+
     public void loop();
 
 }

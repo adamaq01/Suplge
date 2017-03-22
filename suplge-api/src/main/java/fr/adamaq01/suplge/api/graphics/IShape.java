@@ -5,6 +5,6 @@ package fr.adamaq01.suplge.api.graphics;
  */
 public interface IShape {
 
-    public void draw(IGraphics graphics);
+    public void draw(IGraphics graphics, int x, int y, boolean filled);
 
 }

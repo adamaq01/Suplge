@@ -6,7 +6,7 @@ import fr.adamaq01.suplge.api.input.controllers.IControllerMapping;
 /**
  * Created by Adamaq01 on 18/03/2017.
  */
-public class PlayStationControllerMapping implements IControllerMapping {
+public class GLFWPlayStationControllerMapping implements IControllerMapping {
 
     @Override
     public int getRealIdByButton(IController.Button button) {

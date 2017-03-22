@@ -88,6 +88,10 @@ public interface IController extends Input, Manageable {
 
     public boolean isConnected();
 
+    public void setControllerMapping(IControllerMapping mapping);
+
+    public IControllerMapping getControllerMapping();
+
     public String getName();
 
 }

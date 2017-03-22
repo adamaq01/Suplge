@@ -6,7 +6,7 @@ import fr.adamaq01.suplge.api.input.controllers.IControllerMapping;
 /**
  * Created by Adamaq01 on 18/03/2017.
  */
-public class XboxControllerMapping implements IControllerMapping {
+public class GLFWXboxControllerMapping implements IControllerMapping {
 
     @Override
     public int getRealIdByButton(IController.Button button) {

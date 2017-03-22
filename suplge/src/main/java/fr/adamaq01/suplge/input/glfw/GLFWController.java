@@ -3,8 +3,6 @@ package fr.adamaq01.suplge.input.glfw;
 import fr.adamaq01.suplge.api.input.controllers.IController;
 import fr.adamaq01.suplge.api.input.controllers.IControllerMapping;
 import fr.adamaq01.suplge.api.input.InputType;
-import fr.adamaq01.suplge.input.glfw.mappings.PlayStationControllerMapping;
-import fr.adamaq01.suplge.input.glfw.mappings.XboxControllerMapping;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -21,17 +19,6 @@ public class GLFWController implements IController {
     public GLFWController() {
         this.glfwId = controllers;
         controllers++;
-        switch(getName()) {
-            case "Xbox 360 Controller":
-                this.mapping = new XboxControllerMapping();
-                return;
-            case "Wireless Controller":
-                this.mapping = new PlayStationControllerMapping();
-                return;
-            default:
-                this.mapping = new XboxControllerMapping();
-                return;
-        }
     }
 
     @Override
@@ -51,11 +38,13 @@ public class GLFWController implements IController {
 
     @Override
     public float getJoyStickValue(JoyStick joystick, ControllerAxe axe) {
+        if(!isConnected()) return 0;
         return GLFW.glfwGetJoystickAxes(glfwId).get(joystick.getInputKeyId() + axe.getInputKeyId());
     }
 
     @Override
     public boolean isButtonPressed(Button button) {
+        if(!isConnected()) return false;
         return GLFW.glfwGetJoystickButtons(glfwId).get(mapping.getRealIdByButton(button)) == 1;
     }
 
@@ -65,7 +54,18 @@ public class GLFWController implements IController {
     }
 
     @Override
+    public void setControllerMapping(IControllerMapping mapping) {
+        this.mapping = mapping;
+    }
+
+    @Override
+    public IControllerMapping getControllerMapping() {
+        return mapping;
+    }
+
+    @Override
     public String getName() {
+        if(!isConnected()) return "";
         return GLFW.glfwGetJoystickName(glfwId);
     }
 

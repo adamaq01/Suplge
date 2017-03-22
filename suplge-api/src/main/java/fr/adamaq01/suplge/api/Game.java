@@ -5,14 +5,14 @@ import java.util.HashMap;
 /**
  * Created by Adamaq01 on 15/03/2017.
  */
-public abstract class Game {
+public abstract class Game<T extends IWindow> {
 
     private HashMap<Integer, IScreen> screens = new HashMap<>();
     private int currentScreen = 0;
 
-    private IWindow window;
+    private T window;
 
-    public Game(IWindow window, IScreen... screens) {
+    public Game(T window, IScreen... screens) {
         this.window = window;
         int i = 0;
         for(IScreen screen : screens) {
@@ -60,7 +60,7 @@ public abstract class Game {
         return window.getTitle();
     }
 
-    public IWindow getWindow() {
+    public T getWindow() {
         return window;
     }
 
