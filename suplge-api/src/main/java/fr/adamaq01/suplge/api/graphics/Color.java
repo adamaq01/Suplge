@@ -21,13 +21,14 @@ public class Color {
     public static final Color PINK = new Color(255, 0, 255);
     public static final Color PURPLE = new Color(128, 0, 128);
 
-    private int r, g, b, a;
+    private int r, g, b;
+    private float a;
 
     public Color(int r, int g, int b) {
-        this(r, g, b, 255);
+        this(r, g, b, 1);
     }
 
-    public Color(int r, int g, int b, int a) {
+    public Color(int r, int g, int b, float a) {
         this.r = r;
         this.g = g;
         this.b = b;
@@ -46,7 +47,7 @@ public class Color {
         return b;
     }
 
-    public int getAlpha() {
+    public float getAlpha() {
         return a;
     }
 }

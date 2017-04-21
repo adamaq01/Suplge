@@ -1,12 +1,14 @@
 package fr.adamaq01.suplge.vulkan.graphics.shapes;
 
-import fr.adamaq01.suplge.api.graphics.IGraphics;
 import fr.adamaq01.suplge.api.graphics.IShape;
+import fr.adamaq01.suplge.vulkan.GraphicsDevice;
+import fr.adamaq01.suplge.vulkan.VKWindow;
+import fr.adamaq01.suplge.vulkan.graphics.VKGraphics;
 
 /**
  * Created by Adamaq01 on 21/03/2017.
  */
-public class Rectangle implements IShape {
+public class Rectangle implements IShape<VKWindow, VKGraphics> {
 
     private int width, height;
 
@@ -16,7 +18,15 @@ public class Rectangle implements IShape {
     }
 
     @Override
-    public void draw(IGraphics graphics, int x, int y, boolean filled) {
+    public void draw(VKGraphics graphics, int x, int y, boolean filled) {
+        GraphicsDevice graphicsDevice = graphics.getGraphicsDevice();
+    }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

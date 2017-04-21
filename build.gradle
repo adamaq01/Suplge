@@ -108,6 +108,6 @@ project(":suplge") {
 project(":suplgetest") {
     dependencies {
         compile project(":suplge")
-        compile project(":suplge-vulkan")
+        compile project(":suplge-opengl")
     }
 }

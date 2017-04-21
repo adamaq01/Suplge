@@ -12,6 +12,8 @@ public abstract class Game<T extends IWindow> {
 
     private T window;
 
+    private boolean paused = false;
+
     public Game(T window, IScreen... screens) {
         this.window = window;
         int i = 0;
@@ -68,4 +70,11 @@ public abstract class Game<T extends IWindow> {
         this.screens.put(this.screens.size() + 1, screen);
     }
 
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
 }

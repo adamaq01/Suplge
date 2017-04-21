@@ -3,10 +3,9 @@ package fr.adamaq01.suplge.vulkan;
 import fr.adamaq01.suplge.api.Game;
 import fr.adamaq01.suplge.api.IImage;
 import fr.adamaq01.suplge.api.IWindow;
-import fr.adamaq01.suplge.api.graphics.IGraphics;
 import fr.adamaq01.suplge.vulkan.graphics.VKGraphics;
 import fr.adamaq01.suplge.vulkan.utils.GLFWUtil;
-import fr.adamaq01.suplge.vulkan.utils.VkUtil;
+import fr.adamaq01.suplge.vulkan.utils.VKUtil;
 import fr.adamaq01.suplge.vulkan.utils.builders.VkInstanceBuilder;
 import org.lwjgl.vulkan.VkInstance;
 
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 public class VKWindow implements IWindow {
 
     private Game game;
-    private IGraphics graphics;
+    private VKGraphics graphics;
 
     // Window Infos
     private String title;
@@ -47,8 +46,8 @@ public class VKWindow implements IWindow {
 
         // Vulkan
         this.instance = new VkInstanceBuilder(title).applicationVersion(1, 0, 0).addLayer("VK_LAYER_LUNARG_standard_validation").build();
-        this.surface = VkUtil.createSurface(instance, windowHandle);
-        this.graphicsDevices = VkUtil.getDevices(instance, surface);
+        this.surface = VKUtil.createSurface(this);
+        this.graphicsDevices = VKUtil.getDevices(this);
     }
 
     @Override
@@ -103,7 +102,7 @@ public class VKWindow implements IWindow {
 
     @Override
     public void open(Game game) {
-        this.graphics = new VKGraphics();
+        this.graphics = new VKGraphics(this, this.graphicsDevices.get(0));
         this.game = game;
         GLFWUtil.setWindowCloseCallback(this.windowHandle, () -> {
             game.getCurrentScreen().onDisable(game);
@@ -201,11 +200,27 @@ public class VKWindow implements IWindow {
         GLFWUtil.terminate(this.windowHandle);
     }
 
+    public void setWindowHandle(long windowHandle) {
+        this.windowHandle = windowHandle;
+    }
+
     public long getWindowHandle() {
         return this.windowHandle;
     }
 
-    public void setWindowHandle(long window) {
-        this.windowHandle = window;
+    public VkInstance getVKInstance() {
+        return instance;
+    }
+
+    public ArrayList<GraphicsDevice> getGraphicsDevices() {
+        return graphicsDevices;
+    }
+
+    public long getSurface() {
+        return surface;
+    }
+
+    public VKGraphics getGraphics() {
+        return graphics;
     }
 }

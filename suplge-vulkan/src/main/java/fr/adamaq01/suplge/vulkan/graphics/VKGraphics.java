@@ -3,20 +3,31 @@ package fr.adamaq01.suplge.vulkan.graphics;
 import fr.adamaq01.suplge.api.graphics.Color;
 import fr.adamaq01.suplge.api.graphics.IGraphics;
 import fr.adamaq01.suplge.api.graphics.IShape;
+import fr.adamaq01.suplge.vulkan.GraphicsDevice;
+import fr.adamaq01.suplge.vulkan.VKWindow;
+
+import java.nio.LongBuffer;
 
 /**
  * Created by Adamaq01 on 21/03/2017.
  */
-public class VKGraphics implements IGraphics {
+public class VKGraphics implements IGraphics<VKWindow> {
 
     private Color color;
+    private VKWindow window;
+    private GraphicsDevice graphicsDevice;
 
-    public VKGraphics() {
-        this(Color.BLACK);
+    private LongBuffer swapChainImageViews;
+
+    public VKGraphics(VKWindow window, GraphicsDevice graphicsDevice) {
+        this(window, graphicsDevice, Color.BLACK);
     }
 
-    public VKGraphics(Color color) {
+    public VKGraphics(VKWindow window, GraphicsDevice graphicsDevice, Color color) {
+        this.window = window;
+        this.graphicsDevice = graphicsDevice;
         this.color = color;
+        this.graphicsDevice.recreateSwapchain();
     }
 
     @Override
@@ -27,6 +38,33 @@ public class VKGraphics implements IGraphics {
     @Override
     public Color getColor() {
         return this.color;
+    }
+
+    @Override
+    public void setWindow(VKWindow window) {
+        this.window = window;
+    }
+
+    public void setGraphicsDevice(GraphicsDevice graphicsDevice) {
+        this.graphicsDevice = graphicsDevice;
+        this.graphicsDevice.recreateSwapchain();
+    }
+
+    public GraphicsDevice getGraphicsDevice() {
+        return this.graphicsDevice;
+    }
+
+    @Override
+    public VKWindow getWindow() {
+        return this.window;
+    }
+
+    public LongBuffer getSwapChainImageViews() {
+        return swapChainImageViews;
+    }
+
+    public void setSwapChainImageViews(LongBuffer swapChainImageViews) {
+        this.swapChainImageViews = swapChainImageViews;
     }
 
     @Override

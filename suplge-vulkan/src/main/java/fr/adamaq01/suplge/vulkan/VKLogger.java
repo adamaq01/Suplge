@@ -26,6 +26,12 @@ public class VKLogger implements ILogger {
     }
 
     @Override
+    public void debug(String message) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        stream.println(simpleDateFormat.format(new Date(System.currentTimeMillis())) + " [" + name + " DEBUG] " + message);
+    }
+
+    @Override
     public void error(String message) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
         stream.println(simpleDateFormat.format(new Date(System.currentTimeMillis())) + " [" + name + " ERROR] " + message);

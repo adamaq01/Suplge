@@ -1,10 +1,13 @@
 package fr.adamaq01.suplge.vulkan;
 
+import fr.adamaq01.suplge.vulkan.utils.SizeUtils;
+import fr.adamaq01.suplge.vulkan.utils.VKUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.vulkan.*;
 
 import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -13,17 +16,20 @@ import static org.lwjgl.system.MemoryUtil.*;
  */
 public class GraphicsDevice {
 
+    private VKWindow window;
     private VkPhysicalDevice physicalDevice;
     private VkDevice logicalDevice;
     private VkQueue graphicsQueue, presentQueue;
-    private long surface;
+    private LongBuffer swapChain;
+    private LongBuffer swapChainImages;
+    private VkSurfaceFormatKHR.Buffer surfaceFormat;
 
-    public GraphicsDevice(VkPhysicalDevice physicalDevice, VkDevice logicalDevice, long surface) {
+    public GraphicsDevice(VKWindow window, VkPhysicalDevice physicalDevice, VkDevice logicalDevice, LongBuffer swapChain, LongBuffer swapChainImages, VkSurfaceFormatKHR.Buffer surfaceFormat) {
+        this.window = window;
         this.physicalDevice = physicalDevice;
         this.logicalDevice = logicalDevice;
-        this.surface = surface;
 
-        QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+        QueueFamilyIndices indices = findQueueFamilies();
 
         graphicsQueue = new VkQueue(VK10.VK_NULL_HANDLE, logicalDevice);
         PointerBuffer graphicsQueuePointer = memAllocPointer(1);
@@ -37,6 +43,10 @@ public class GraphicsDevice {
 
         graphicsQueuePointer.free();
         presentQueuePointer.free();
+
+        this.swapChain = swapChain;
+        this.swapChainImages = swapChainImages;
+        this.surfaceFormat = surfaceFormat;
     }
 
     public VkPhysicalDevice getPhysicalDevice() {
@@ -55,8 +65,22 @@ public class GraphicsDevice {
         return presentQueue;
     }
 
-    public long getSurface() {
-        return surface;
+    public LongBuffer getSwapChain() {
+        return swapChain;
+    }
+
+    public LongBuffer getSwapChainImages() {
+        return swapChainImages;
+    }
+
+    public VkSurfaceFormatKHR.Buffer getSurfaceFormat() {
+        return surfaceFormat;
+    }
+
+    public void recreateSwapchain() {
+        Object[] recreateSwapchainInfos = VKUtil.recreateSwapchain(physicalDevice, logicalDevice, window.getSurface(), swapChain.get(0));
+        this.swapChain = (LongBuffer) recreateSwapchainInfos[0];
+        this.swapChainImages = (LongBuffer) recreateSwapchainInfos[1];
     }
 
     public String getGPUName() {
@@ -90,14 +114,14 @@ public class GraphicsDevice {
         return score;
     }
 
-    private QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+    public QueueFamilyIndices findQueueFamilies() {
         QueueFamilyIndices indices = new QueueFamilyIndices();
 
         IntBuffer queueFamilyCount = memAllocInt(1);
-        VK10.vkGetPhysicalDeviceQueueFamilyProperties(device, queueFamilyCount, null);
+        VK10.vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, queueFamilyCount, null);
 
         VkQueueFamilyProperties.Buffer queueFamilies = VkQueueFamilyProperties.calloc(queueFamilyCount.get(queueFamilyCount.position()));
-        VK10.vkGetPhysicalDeviceQueueFamilyProperties(device, queueFamilyCount, queueFamilies);
+        VK10.vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, queueFamilyCount, queueFamilies);
 
         int i = 0;
         for (int a = 0; a < queueFamilyCount.get(queueFamilyCount.position()); a++) {
@@ -107,7 +131,7 @@ public class GraphicsDevice {
             }
 
             IntBuffer presentSupport = memAllocInt(1);
-            KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, presentSupport);
+            KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, window.getSurface(), presentSupport);
 
             if (queueFamily.queueCount() > 0 && (presentSupport.get(0) != 0)) {
                 indices.presentFamily = i;
@@ -129,12 +153,60 @@ public class GraphicsDevice {
         return indices;
     }
 
-    private class QueueFamilyIndices {
-        int graphicsFamily = -1;
-        int presentFamily = -1;
+    public static class QueueFamilyIndices {
+
+        private int graphicsFamily = -1;
+        private int presentFamily = -1;
+
+        public static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice physicalDevice, long surface) {
+            QueueFamilyIndices indices = new QueueFamilyIndices();
+
+            IntBuffer queueFamilyCount = memAllocInt(1);
+            VK10.vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, queueFamilyCount, null);
+
+            VkQueueFamilyProperties.Buffer queueFamilies = VkQueueFamilyProperties.calloc(queueFamilyCount.get(queueFamilyCount.position()));
+            VK10.vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, queueFamilyCount, queueFamilies);
+
+            int i = 0;
+            for (int a = 0; a < queueFamilyCount.get(queueFamilyCount.position()); a++) {
+                VkQueueFamilyProperties queueFamily = queueFamilies.get(0);
+                if ((queueFamily.queueCount() > 0) && ((queueFamily.queueFlags() & VK10.VK_QUEUE_GRAPHICS_BIT) != 0)) {
+                    indices.graphicsFamily = i;
+                }
+
+                IntBuffer presentSupport = memAllocInt(1);
+                KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, surface, presentSupport);
+
+                if (queueFamily.queueCount() > 0 && (presentSupport.get(0) != 0)) {
+                    indices.presentFamily = i;
+                }
+
+                queueFamily.free();
+                memFree(presentSupport);
+
+                if (indices.isComplete()) {
+                    break;
+                }
+
+                i++;
+            }
+
+            memFree(queueFamilyCount);
+            queueFamilies.free();
+
+            return indices;
+        }
 
         public boolean isComplete() {
             return graphicsFamily >= 0 && presentFamily >= 0;
+        }
+
+        public int getGraphicsFamily() {
+            return graphicsFamily;
+        }
+
+        public int getPresentFamily() {
+            return presentFamily;
         }
     }
 }
