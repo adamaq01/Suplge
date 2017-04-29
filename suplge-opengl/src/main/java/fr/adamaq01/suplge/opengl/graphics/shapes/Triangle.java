@@ -23,9 +23,9 @@ public class Triangle implements IShape<GLWindow, GLGraphics> {
     public void draw(GLGraphics graphics, int x, int y, boolean filled) {
         glBegin(filled ? GL_TRIANGLES : GL_LINE_LOOP);
         {
-            glVertex2f(0, -(height / 2));
-            glVertex2f(base / 2, height / 2);
-            glVertex2f(-(base / 2), height / 2);
+            glVertex2f(0, height / 2);
+            glVertex2f(-(base / 2), -(height / 2));
+            glVertex2f(base / 2, -(height / 2));
         }
         glEnd();
     }

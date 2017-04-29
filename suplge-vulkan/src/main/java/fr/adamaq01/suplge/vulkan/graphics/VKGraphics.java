@@ -1,5 +1,6 @@
 package fr.adamaq01.suplge.vulkan.graphics;
 
+import fr.adamaq01.suplge.api.IImage;
 import fr.adamaq01.suplge.api.graphics.Color;
 import fr.adamaq01.suplge.api.graphics.IGraphics;
 import fr.adamaq01.suplge.api.graphics.IShape;
@@ -41,6 +42,16 @@ public class VKGraphics implements IGraphics<VKWindow> {
     }
 
     @Override
+    public void setRotation(int angle) {
+
+    }
+
+    @Override
+    public int getRotation() {
+        return 0;
+    }
+
+    @Override
     public void setWindow(VKWindow window) {
         this.window = window;
     }
@@ -75,5 +86,15 @@ public class VKGraphics implements IGraphics<VKWindow> {
     @Override
     public void fillShape(IShape shape, int x, int y) {
         shape.draw(this, x, y, true);
+    }
+
+    @Override
+    public void drawImage(IImage image, int x, int y, int width, int height, boolean colored) {
+
+    }
+
+    @Override
+    public void drawImage(IImage image, int x, int y, boolean colored) {
+
     }
 }

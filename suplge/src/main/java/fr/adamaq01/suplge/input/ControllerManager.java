@@ -13,10 +13,15 @@ import java.util.HashMap;
  */
 public class ControllerManager implements IManager<IController> {
 
+    public final static ControllerManager MANAGER = new ControllerManager();
+
     private int controllersSize = 0;
 
     private HashMap<Integer, IController> controllers = new HashMap<>();
     private HashMap<IController, Integer> controllersId = new HashMap<>();
+
+    private ControllerManager() {
+    }
 
     @Override
     public void add(IController controller) {

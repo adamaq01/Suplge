@@ -22,6 +22,11 @@ public class Rectangle implements IShape<VKWindow, VKGraphics> {
         GraphicsDevice graphicsDevice = graphics.getGraphicsDevice();
     }
 
+    @Override
+    public boolean collides(int x, int y, int drawX, int drawY) {
+        return false;
+    }
+
     public int getWidth() {
         return width;
     }

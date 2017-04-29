@@ -7,6 +7,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 
 import java.nio.IntBuffer;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -72,7 +74,7 @@ public class GLFWUtil {
     }
 
     public static void setWindowIcon(long window, IImage icon) {
-        glfwSetWindowIcon(window, GLFWImage.create(icon.length()).width(icon.getWidth()).height(icon.getHeight()).pixels(icon.data()));
+        glfwSetWindowIcon(window, GLFWImage.create(1).width(icon.getWidth()).height(icon.getHeight()).pixels(icon.data()));
     }
 
     public static void setWindowResizable(Game game, GLWindow window, boolean resizable) {

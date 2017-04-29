@@ -18,13 +18,25 @@ public class Circle implements IShape<GLWindow,GLGraphics> {
     }
 
     @Override
-    public void draw(GLGraphics graphics, int x, int y, boolean filled) {
-        float delta_theta = 0.01f;
+    public void draw(GLGraphics graphics, int cx, int cy, boolean filled) {
+        cx = cx / 2;
+        cy = cy / 2;
 
-        glBegin(filled ? GL_POLYGON : GL_LINES);
-
-        for (float angle = 0; angle < 2 * Math.PI; angle += delta_theta)
-            glVertex2d(radius * Math.cos(angle), radius * Math.sin(angle));
+        glBegin(filled ? GL_LINES : GL_POINTS);
+        for (int x = radius, y = 0, err = 0; x >= y; ) {
+            glVertex2f(cx - y, cy + x);
+            glVertex2f(cx + y, cy + x);
+            glVertex2f(cx - x, cy + y);
+            glVertex2f(cx + x, cy + y);
+            glVertex2f(cx - x, cy - y);
+            glVertex2f(cx + x, cy - y);
+            glVertex2f(cx - y, cy - x);
+            glVertex2f(cx + y, cy - x);
+            if (err <= 0)
+                err += 2 * ++y + 1;
+            if (err > 0)
+                err -= 2 * --x + 1;
+        }
 
         glEnd();
     }

@@ -35,7 +35,9 @@ public abstract class Game<T extends IWindow> {
     }
 
     public void setCurrentScreen(int screen) {
+        getCurrentScreen().onDisable(this);
         this.currentScreen = screen;
+        getCurrentScreen().onEnable(this);
     }
 
     public IScreen getCurrentScreen() {

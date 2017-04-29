@@ -14,4 +14,10 @@ public interface IImage {
     public int getHeight();
 
     public ByteBuffer data();
+
+    public void load();
+
+    public boolean loaded();
+
+    public IImage sub(int x, int y, int width, int height);
 }

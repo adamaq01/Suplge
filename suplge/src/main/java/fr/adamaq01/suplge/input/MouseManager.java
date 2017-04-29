@@ -10,10 +10,15 @@ import java.util.HashMap;
  */
 public class MouseManager implements IManager<IMouse> {
 
+    public static final MouseManager MANAGER = new MouseManager();
+
     private int mousesSize = 0;
 
     private HashMap<Integer, IMouse> mouses = new HashMap<>();
     private HashMap<IMouse, Integer> mousesId = new HashMap<>();
+
+    private MouseManager() {
+    }
 
     @Override
     public void add(IMouse mouse) {

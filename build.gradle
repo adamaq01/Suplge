@@ -18,6 +18,7 @@ version '1.0'
 allprojects {
     apply plugin: "idea"
     apply plugin: 'java'
+    apply plugin: 'maven'
 
     version = "1.0"
     ext {
@@ -42,10 +43,19 @@ allprojects {
         with jar
     }
 
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: "file:///C:/Users/Adamaq01/.m2/repository/")
+            }
+        }
+    }
+
 }
 
 project(":suplge-api") {
     dependencies {
+        compile "com.mashape.unirest:unirest-java:1.4.9"
         compile "org.lwjgl:lwjgl:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-assimp:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-bgfx:${lwjglVersion}"

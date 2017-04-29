@@ -14,10 +14,15 @@ import java.util.HashMap;
  */
 public class KeyboardManager implements IManager<IKeyboard> {
 
+    public static final KeyboardManager MANAGER = new KeyboardManager();
+
     private int keyboardsSize = 0;
 
     private HashMap<Integer, IKeyboard> keyboards = new HashMap<>();
     private HashMap<IKeyboard, Integer> keyboardsId = new HashMap<>();
+
+    private KeyboardManager() {
+    }
 
     @Override
     public void add(IKeyboard keyboard) {
