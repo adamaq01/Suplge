@@ -1,15 +1,20 @@
 package fr.adamaq01.suplge.opengl.utils;
 
 import fr.adamaq01.suplge.api.IImage;
+import fr.adamaq01.suplge.api.graphics.IFont;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
+import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTruetype;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SeekableByteChannel;
@@ -128,14 +133,14 @@ public class Utils {
         return d;
     }
 
-    public static Object[] initFont(InputStream font, int height) {
+    public static Object[] initFont(InputStream fontStream, int fontSize) {
         int texID = glGenTextures();
         STBTTBakedChar.Buffer cdata = STBTTBakedChar.malloc(96);
 
-        ByteBuffer ttf = byteArrayToByteBuffer(getDataFromInputStream(font));
+        ByteBuffer ttf = byteArrayToByteBuffer(getDataFromInputStream(fontStream));
 
         ByteBuffer bitmap = BufferUtils.createByteBuffer(512 * 512);
-        STBTruetype.stbtt_BakeFontBitmap(ttf, height, bitmap, 512, 512, 32, cdata);
+        STBTruetype.stbtt_BakeFontBitmap(ttf, fontSize, bitmap, 512, 512, 32, cdata);
 
         glBindTexture(GL_TEXTURE_2D, texID);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, 512, 512, 0, GL_ALPHA, GL_UNSIGNED_BYTE, bitmap);
@@ -144,5 +149,4 @@ public class Utils {
 
         return new Object[] {cdata, texID};
     }
-
 }

@@ -56,6 +56,7 @@ allprojects {
 project(":suplge-api") {
     dependencies {
         compile "com.mashape.unirest:unirest-java:1.4.9"
+        compile "org.jbox2d:jbox2d-library:2.2.1.1"
         compile "org.lwjgl:lwjgl:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-assimp:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-bgfx:${lwjglVersion}"
@@ -117,7 +118,11 @@ project(":suplge") {
 
 project(":suplgetest") {
     dependencies {
-        compile project(":suplge")
-        compile project(":suplge-opengl")
+        compile 'Suplge:suplge:1.0'
+        compile 'Suplge:suplge-opengl:1.0'
+        compile "com.corundumstudio.socketio:netty-socketio:1.7.12"
+        compile "io.socket:socket.io-client:0.8.3"
+        compile "com.github.luben:zstd-jni:1.1.2"
+        runtime "com.github.luben:zstd-jni:1.1.2"
     }
 }

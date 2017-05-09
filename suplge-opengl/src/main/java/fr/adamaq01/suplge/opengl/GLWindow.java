@@ -4,6 +4,8 @@ import fr.adamaq01.suplge.api.Game;
 import fr.adamaq01.suplge.api.IImage;
 import fr.adamaq01.suplge.api.IWindow;
 import fr.adamaq01.suplge.api.graphics.Color;
+import fr.adamaq01.suplge.api.graphics.IFont;
+import fr.adamaq01.suplge.opengl.graphics.GLFont;
 import fr.adamaq01.suplge.opengl.graphics.GLGraphics;
 import fr.adamaq01.suplge.opengl.utils.GLFWUtil;
 import org.lwjgl.glfw.GLFW;
@@ -28,10 +30,9 @@ public class GLWindow implements IWindow {
     private long windowHandle;
     private int fps = 0, maxfps, tps;
     private double nanoSecondsTicks, nanoSecondsFps;
-    private InputStream fontStream;
-    private int fontHeight;
+    private GLFont font;
 
-    public GLWindow(String title, IImage icon, int width, int height, boolean resizable, int maxfps, int tps, InputStream fontStream, int fontHeight) {
+    public GLWindow(String title, IImage icon, int width, int height, boolean resizable, int maxfps, int tps, GLFont font) {
         // Window
         this.maxfps = maxfps <= 0 ? 60 : maxfps;
         this.tps = tps <= 0 ? 64 : tps;
@@ -41,8 +42,7 @@ public class GLWindow implements IWindow {
         this.width = width;
         this.height = height;
         this.windowHandle = GLFWUtil.generateWindow(title, width, height, resizable);
-        this.fontStream = fontStream;
-        this.fontHeight = fontHeight;
+        this.font = font;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class GLWindow implements IWindow {
 
     @Override
     public void open(Game game) {
-        this.graphics = new GLGraphics(this, Color.BLACK, this.fontStream, this.fontHeight);
+        this.graphics = new GLGraphics(this, Color.BLACK, this.font);
         this.game = game;
         GLFW.glfwMakeContextCurrent(this.windowHandle);
         GLFWUtil.setWindowCloseCallback(this.windowHandle, () -> {

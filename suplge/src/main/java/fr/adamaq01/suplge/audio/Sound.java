@@ -1,6 +1,5 @@
 package fr.adamaq01.suplge.audio;
 
-import fr.adamaq01.suplge.SuplgeEngine;
 import fr.adamaq01.suplge.api.audio.ISound;
 import fr.adamaq01.suplge.utils.Utils;
 import org.lwjgl.system.MemoryUtil;
@@ -8,8 +7,6 @@ import org.lwjgl.system.MemoryUtil;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;

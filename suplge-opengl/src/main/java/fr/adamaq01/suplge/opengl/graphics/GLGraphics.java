@@ -1,9 +1,7 @@
 package fr.adamaq01.suplge.opengl.graphics;
 
 import fr.adamaq01.suplge.api.IImage;
-import fr.adamaq01.suplge.api.graphics.Color;
-import fr.adamaq01.suplge.api.graphics.IGraphics;
-import fr.adamaq01.suplge.api.graphics.IShape;
+import fr.adamaq01.suplge.api.graphics.*;
 import fr.adamaq01.suplge.opengl.GLWindow;
 import fr.adamaq01.suplge.opengl.graphics.shapes.Circle;
 import fr.adamaq01.suplge.opengl.utils.GLImage;
@@ -18,31 +16,29 @@ import org.lwjgl.system.MemoryUtil;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Adamaq01 on 17/04/2017.
  */
-public class GLGraphics implements IGraphics<GLWindow> {
+public class GLGraphics implements IGraphics<GLWindow, GLFont> {
 
     private GLWindow window;
     private Color color;
     private boolean ortho;
     private int angle;
-    private InputStream fontStream;
-    private int fontHeight;
-    private Object[] font;
+    private GLFont font;
 
-    public GLGraphics(GLWindow window, InputStream fontStream, int fontHeight) {
-        this(window, Color.WHITE, fontStream, fontHeight);
+    public GLGraphics(GLWindow window, GLFont font) {
+        this(window, Color.WHITE, font);
     }
 
-    public GLGraphics(GLWindow window, Color color, InputStream fontStream, int fontHeight) {
+    public GLGraphics(GLWindow window, Color color, GLFont font) {
         this.window = window;
         this.color = color;
-        this.fontStream = fontStream;
-        this.fontHeight = fontHeight;
+        this.font = font;
     }
 
     @Override
@@ -73,6 +69,16 @@ public class GLGraphics implements IGraphics<GLWindow> {
     @Override
     public void setWindow(GLWindow window) {
         this.window = window;
+    }
+
+    @Override
+    public void setFont(GLFont font) {
+        this.font = font;
+    }
+
+    @Override
+    public GLFont getFont() {
+        return this.font;
     }
 
     @Override
@@ -108,18 +114,18 @@ public class GLGraphics implements IGraphics<GLWindow> {
     }
 
     @Override
-    public void drawImage(IImage image, int x, int y, int width, int height, boolean colored) {
+    public void drawImage(IImage image, int x, int y, int width, int height, boolean colored, DrawType... drawType) {
         if (!image.loaded()) image.load();
         glColor4f(1, 1, 1, 1);
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBindTexture(GL_TEXTURE_2D, ((GLImage) image).getGlId());
+
         glPushMatrix();
-        glTranslatef(x, y, 0);
-        glRotated(angle, 0, 0, 1);
+        translateFromDrawType(drawType.length > 0 ? drawType[0] : DrawType.BOTTOM_LEFT, x, y, width, height);
         if (colored) glColor4f((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, color.getAlpha());
 
-        glBindTexture(GL_TEXTURE_2D, ((GLImage) image).getGlId());
         glBegin(GL_QUADS);
         {
             glTexCoord2f(0, 1);
@@ -142,53 +148,14 @@ public class GLGraphics implements IGraphics<GLWindow> {
     }
 
     @Override
-    public void drawImage(IImage image, int x, int y, boolean colored) {
-        drawImage(image, x, y, image.getWidth(), image.getHeight(), colored);
+    public void drawImage(IImage image, int x, int y, boolean colored, DrawType... drawType) {
+        drawImage(image, x, y, image.getWidth(), image.getHeight(), colored, drawType);
     }
 
     @Override
-    public void drawString(String string, int x, int y, float scaleFactor) {
-        if(this.font == null) {
-            this.font = Utils.initFont(this.fontStream, this.fontHeight);
-        }
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer xx = stack.floats(0.0f);
-            FloatBuffer yy = stack.floats(0.0f);
-            STBTTAlignedQuad q = STBTTAlignedQuad.mallocStack(stack);
-            glPushMatrix();
-            glBindTexture(GL_TEXTURE_2D, (Integer) this.font[1]);
-
-            glTranslatef(x, y, 0f);
-            glScalef(scaleFactor, scaleFactor, 1f);
-            glColor4f((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, color.getAlpha());
-            glBegin(GL_QUADS);
-            for (int i = 0; i < string.length(); i++) {
-                char c = string.charAt(i);
-                if (c == '\n') {
-                    yy.put(0, yy.get(0) + 16);
-                    xx.put(0, 0.0f);
-                    continue;
-                } else if (c < 32 || 128 <= c)
-                    continue;
-                STBTruetype.stbtt_GetBakedQuad((STBTTBakedChar.Buffer) this.font[0], 512, 512, c - 32, xx, yy, q, true);
-                glTexCoord2f(q.s0(), q.t1());
-                glVertex2f(q.x0(), q.y0());
-
-                glTexCoord2f(q.s1(), q.t1());
-                glVertex2f(q.x1(), q.y0());
-
-                glTexCoord2f(q.s1(), q.t0());
-                glVertex2f(q.x1(), q.y1());
-
-                glTexCoord2f(q.s0(), q.t0());
-                glVertex2f(q.x0(), q.y1());
-            }
-            glEnd();
-
-            glColor4f(0, 0, 0, 1);
-
-            glPopMatrix();
-        }
+    public void drawString(String string, int x, int y, IFont.Alignement alignement) {
+        if (!this.font.loaded()) this.font.load();
+        this.font.drawString(this, string, x, y, alignement);
     }
 
     public void setOrtho(boolean ortho) {
@@ -215,5 +182,25 @@ public class GLGraphics implements IGraphics<GLWindow> {
 
     public boolean isOrtho() {
         return ortho;
+    }
+
+    private void translateFromDrawType(DrawType drawType, int x, int y, int width, int height) {
+        switch (drawType) {
+            case CENTERED:
+                glTranslatef(x - (width / 2), y - (height / 2), 0);
+                break;
+            case TOP_LEFT:
+                glTranslatef(x, y - height, 0);
+                break;
+            case TOP_RIGHT:
+                glTranslatef(x - width, y - height, 0);
+                break;
+            case BOTTOM_LEFT:
+                glTranslatef(x, y, 0);
+                break;
+            case BOTTOM_RIGHT:
+                glTranslatef(x - width, y, 0);
+                break;
+        }
     }
 }

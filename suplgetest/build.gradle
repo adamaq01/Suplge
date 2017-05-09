@@ -5,3 +5,36 @@ apply plugin: 'java'
 apply plugin: 'idea'
 
 sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal();
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+}
+
+dependencies {
+    compile 'Suplge:suplge:1.0'
+    compile 'Suplge:suplge-opengl:1.0'
+    compile "com.corundumstudio.socketio:netty-socketio:1.7.12"
+    compile "io.socket:socket.io-client:0.8.3"
+    compile "com.github.luben:zstd-jni:1.1.2"
+    runtime "com.github.luben:zstd-jni:1.1.2"
+}
+
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+    }
+}
+
+shadowJar {
+    mainClassName = 'fr.adamaq01.suplgetest.TestClient'
+    baseName = 'TestClient'
+}

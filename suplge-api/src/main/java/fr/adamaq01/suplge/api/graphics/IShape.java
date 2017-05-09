@@ -5,7 +5,7 @@ import fr.adamaq01.suplge.api.IWindow;
 /**
  * Created by Adamaq01 on 15/03/2017.
  */
-public interface IShape<T extends IWindow, G extends IGraphics<? extends T>> {
+public interface IShape<T extends IWindow, G extends IGraphics<? extends T, ? extends IFont>> {
 
     public void draw(G graphics, int x, int y, boolean filled);
 
