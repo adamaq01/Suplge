@@ -1,37 +1,33 @@
 package fr.adamaq01.suplgetest;
 
-        import com.fasterxml.jackson.core.JsonProcessingException;
-        import com.fasterxml.jackson.databind.ObjectMapper;
-        import com.github.luben.zstd.Zstd;
-        import fr.adamaq01.suplge.SuplgeEngine;
-        import fr.adamaq01.suplge.api.Game;
-        import fr.adamaq01.suplge.api.IScreen;
-        import fr.adamaq01.suplge.api.graphics.Color;
-        import fr.adamaq01.suplge.api.graphics.DrawType;
-        import fr.adamaq01.suplge.api.graphics.IFont;
-        import fr.adamaq01.suplge.api.input.controllers.IController;
-        import fr.adamaq01.suplge.audio.Sound;
-        import fr.adamaq01.suplge.input.ControllerManager;
-        import fr.adamaq01.suplge.input.glfw.GLFWController;
-        import fr.adamaq01.suplge.opengl.GLWindow;
-        import fr.adamaq01.suplge.opengl.graphics.GLFont;
-        import fr.adamaq01.suplge.opengl.graphics.GLGraphics;
-        import fr.adamaq01.suplge.opengl.graphics.shapes.*;
-        import fr.adamaq01.suplge.opengl.utils.GLImage;
-        import io.socket.client.IO;
-        import io.socket.client.Socket;
-        import io.socket.emitter.Emitter;
-        import org.lwjgl.opengl.GL11;
-        import org.lwjgl.system.MemoryUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.luben.zstd.Zstd;
+import fr.adamaq01.suplge.SuplgeEngine;
+import fr.adamaq01.suplge.api.Game;
+import fr.adamaq01.suplge.api.IScreen;
+import fr.adamaq01.suplge.api.graphics.Color;
+import fr.adamaq01.suplge.api.graphics.IFont;
+import fr.adamaq01.suplge.api.input.controllers.IController;
+import fr.adamaq01.suplge.audio.Sound;
+import fr.adamaq01.suplge.input.ControllerManager;
+import fr.adamaq01.suplge.input.glfw.GLFWController;
+import fr.adamaq01.suplge.opengl.GLWindow;
+import fr.adamaq01.suplge.opengl.graphics.GLFont;
+import fr.adamaq01.suplge.opengl.graphics.GLGraphics;
+import fr.adamaq01.suplge.opengl.graphics.shapes.*;
+import fr.adamaq01.suplge.opengl.utils.GLImage;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryUtil;
 
-        import javax.imageio.ImageIO;
-        import java.awt.image.BufferedImage;
-        import java.io.ByteArrayInputStream;
-        import java.io.ByteArrayOutputStream;
-        import java.io.IOException;
-        import java.net.URISyntaxException;
-        import java.nio.ByteBuffer;
-        import java.util.Random;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.util.Random;
 
 /**
  * Created by Adamaq01 on 15/03/2017.
@@ -137,8 +133,9 @@ public class Test extends Game<GLWindow> {
             }
 
             // Color changing
-            if (color.getRed() >= 255)
+            if (color.getRed() >= 255) {
                 red = true;
+            }
             if (color.getRed() <= 0)
                 red = false;
 

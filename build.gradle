@@ -23,7 +23,7 @@ allprojects {
     version = "1.0"
     ext {
         appName = "Suplge"
-        lwjglVersion = "3.1.1"
+        lwjglVersion = "3.1.2"
     }
 
     repositories {
@@ -54,7 +54,30 @@ allprojects {
 }
 
 project(":suplge-api") {
+}
+
+project(":suplge-vulkan") {
     dependencies {
+        compile project(":suplge-api")
+        compile "org.lwjgl:lwjgl-vulkan:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+    }
+}
+
+project(":suplge-opengl") {
+    dependencies {
+        compile project(":suplge-api")
+        compile "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+        runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
+    }
+}
+
+project(":suplge") {
+    dependencies {
+        compile project(":suplge-api")
         compile "com.mashape.unirest:unirest-java:1.4.9"
         compile "org.jbox2d:jbox2d-library:2.2.1.1"
         compile "org.lwjgl:lwjgl:${lwjglVersion}"
@@ -70,12 +93,15 @@ project(":suplge-api") {
         compile "org.lwjgl:lwjgl-nuklear:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-opencl:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-openvr:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-ovr:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-par:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-sse:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-tinyexr:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-tinyfd:${lwjglVersion}"
         compile "org.lwjgl:lwjgl-xxhash:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-yoga:${lwjglVersion}"
         runtime "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-assimp:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-bgfx:${lwjglVersion}:${lwjglNatives}"
@@ -86,33 +112,15 @@ project(":suplge-api") {
         runtime "org.lwjgl:lwjgl-nfd:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-nuklear:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-openvr:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-ovr:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-par:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-sse:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:${lwjglNatives}"
+        runtime "org.lwjgl:lwjgl-tinyexr:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-tinyfd:${lwjglVersion}:${lwjglNatives}"
         runtime "org.lwjgl:lwjgl-xxhash:${lwjglVersion}:${lwjglNatives}"
-    }
-}
-
-project(":suplge-vulkan") {
-    dependencies {
-        compile project(":suplge-api")
-        compile "org.lwjgl:lwjgl-vulkan:${lwjglVersion}"
-    }
-}
-
-project(":suplge-opengl") {
-    dependencies {
-        compile project(":suplge-api")
-        compile "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
-        runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
-    }
-}
-
-project(":suplge") {
-    dependencies {
-        compile project(":suplge-api")
+        runtime "org.lwjgl:lwjgl-yoga:${lwjglVersion}:${lwjglNatives}"
     }
 }
 

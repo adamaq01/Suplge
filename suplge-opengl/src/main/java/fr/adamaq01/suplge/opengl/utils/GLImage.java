@@ -58,6 +58,7 @@ public class GLImage implements IImage {
                 ByteBuffer imageData = STBImage.stbi_load_from_memory(image, w, h, comp, 4);
 
                 this.data = imageData;
+                MemoryUtil.memFree(image);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -105,5 +106,9 @@ public class GLImage implements IImage {
 
     public int getGlId() {
         return glId;
+    }
+
+    public void free() {
+        MemoryUtil.memFree(this.data);
     }
 }

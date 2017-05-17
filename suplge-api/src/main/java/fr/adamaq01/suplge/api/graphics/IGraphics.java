@@ -3,8 +3,6 @@ package fr.adamaq01.suplge.api.graphics;
 import fr.adamaq01.suplge.api.IImage;
 import fr.adamaq01.suplge.api.IWindow;
 
-import java.io.InputStream;
-
 /**
  * Created by Adamaq01 on 15/03/2017.
  */
